@@ -1,17 +1,8 @@
 #include <iostream>
 
+#include "prompt_execrcice_1.hpp"
+
 int main() {
-    std::string username;
-    int user_age;
-
-    std::cout << "What is your name? ";
-    std::cin >> username;
-
-    std::cout << "What is your age? ";
-    std::cin >> user_age;
-
-    std::cout << "Hello, " << username
-            << "! You are " << user_age << " years old." << std::endl;
-
+    run_prompt(std::cin, std::cout);
     return 0;
 }
