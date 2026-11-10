@@ -4,19 +4,19 @@ LDLIBS   := -lgtest -lgtest_main -pthread
 
 # All compiled programs go in build/, which .gitignore ignores.
 BUILD := build
-APP   := $(BUILD)/prompt_execrcice_1
-TEST  := $(BUILD)/test_prompt_execrcice_1
+APP   := $(BUILD)/prompt_exercise_1
+TEST  := $(BUILD)/test_prompt_exercise_1
 
 .PHONY: all run test clean
 
 all: $(APP) $(TEST)
 
 # Build the interactive program.
-$(APP): prompt_execrcice_1.cpp include/prompt_execrcice_1.hpp | $(BUILD)
+$(APP): prompt_exercise_1.cpp include/prompt_exercise_1.hpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) $< -o $@
 
 # Build the GoogleTest unit tests.
-$(TEST): tests/test_prompt_execrcice_1.cpp include/prompt_execrcice_1.hpp | $(BUILD)
+$(TEST): tests/test_prompt_exercise_1.cpp include/prompt_exercise_1.hpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) $< $(LDLIBS) -o $@
 
 $(BUILD):

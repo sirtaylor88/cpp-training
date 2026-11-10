@@ -1,4 +1,4 @@
-// * Unit tests for run_prompt() in prompt_execrcice_1.hpp.
+// * Unit tests for run_prompt() in prompt_exercise_1.hpp.
 
 // * Google TEst
 #include <gtest/gtest.h>
@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 
-#include "prompt_execrcice_1.hpp"
+#include "prompt_exercise_1.hpp"
 
 // * Anonymous namespace to avoid polluting the global namespace with test
 // * helpers and constants.

@@ -38,11 +38,11 @@ palette (Ctrl+Shift+P).
 ```text
 cpp-training/
 ├── include/                      # Headers with the exercise logic
-│   └── prompt_execrcice_1.hpp    # run_prompt(): asks for a name and age, then greets
+│   └── prompt_exercise_1.hpp     # run_prompt(): asks for a name and age, then greets
 ├── tests/                        # GoogleTest unit tests
-│   └── test_prompt_execrcice_1.cpp
+│   └── test_prompt_exercise_1.cpp
 ├── build/                        # Compiled programs (created by make, ignored by git)
-├── prompt_execrcice_1.cpp        # main() that runs the prompt on stdin/stdout
+├── prompt_exercise_1.cpp         # main() that runs the prompt on stdin/stdout
 ├── Makefile                      # Build, run and test shortcuts
 └── .vscode/                      # Recommended extensions and IntelliSense config
 ```
@@ -65,8 +65,8 @@ The sections below show the underlying `g++` commands.
 
 ```sh
 mkdir -p build
-g++ -std=c++17 -Wall -Wextra -Iinclude prompt_execrcice_1.cpp -o build/prompt_execrcice_1
-./build/prompt_execrcice_1
+g++ -std=c++17 -Wall -Wextra -Iinclude prompt_exercise_1.cpp -o build/prompt_exercise_1
+./build/prompt_exercise_1
 ```
 
 Example:
@@ -81,15 +81,15 @@ Hello, Alice! You are 30 years old.
 
 ```sh
 mkdir -p build
-g++ -std=c++17 -Wall -Wextra -Iinclude tests/test_prompt_execrcice_1.cpp \
-    -lgtest -lgtest_main -pthread -o build/test_prompt_execrcice_1
-./build/test_prompt_execrcice_1
+g++ -std=c++17 -Wall -Wextra -Iinclude tests/test_prompt_exercise_1.cpp \
+    -lgtest -lgtest_main -pthread -o build/test_prompt_exercise_1
+./build/test_prompt_exercise_1
 ```
 
 Run only some tests (similar to `pytest -k`):
 
 ```sh
-./build/test_prompt_execrcice_1 --gtest_filter='RunPromptTest.Greets*'
+./build/test_prompt_exercise_1 --gtest_filter='RunPromptTest.Greets*'
 ```
 
 ### Compiler options
@@ -99,7 +99,7 @@ Run only some tests (similar to `pytest -k`):
 | `-std=c++17` | Compile using the C++17 language standard |
 | `-Wall` | Enable the common warnings (unused variables, missing `return`, …) |
 | `-Wextra` | Enable extra warnings on top of `-Wall` (unused parameters, signed/unsigned comparison, …) |
-| `-Iinclude` | Also search `include/` for `#include "..."` headers, so any file can include `prompt_execrcice_1.hpp` |
+| `-Iinclude` | Also search `include/` for `#include "..."` headers, so any file can include `prompt_exercise_1.hpp` |
 | `-lgtest` | Link the GoogleTest library (`libgtest`), which provides `TEST`, `EXPECT_EQ`, … |
 | `-lgtest_main` | Link a ready-made `main()` that runs every `TEST`, so test files need no `main()` |
 | `-pthread` | Enable thread support, which GoogleTest uses internally |
@@ -164,5 +164,5 @@ Switch to `-std=c++20` when exercises need C++20 features (concepts, ranges,
    ```
 
 4. Add build rules for the new program and test to the `Makefile`, following
-   the existing `prompt_execrcice_1` rules. Output goes in `build/`, so
+   the existing `prompt_exercise_1` rules. Output goes in `build/`, so
    nothing needs adding to `.gitignore`.
