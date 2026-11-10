@@ -8,17 +8,6 @@
 #include <string>
 
 // * Prompts for a name and an age, then writes a greeting to `out`.
-//
-// * Reads a single whitespace-delimited word from `in` as the name, followed
-// * by an integer as the age. Each prompt is written to `out` before the
-// * corresponding read. If the age cannot be parsed as an integer, it is
-// * reported as 0.
-//
-// * Example:
-// * std::istringstream in("Alice 30");
-// * run_prompt(in, std::cout);
-//   // Prints: What is your name? What is your age? Hello, Alice! You are
-//   //         30 years old.
 inline void run_prompt(std::istream& in, std::ostream& out) {
     std::string username;
     int user_age;
