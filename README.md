@@ -38,11 +38,14 @@ palette (Ctrl+Shift+P).
 ```text
 cpp-training/
 ├── include/                      # Headers with the exercise logic
-│   └── prompt_exercise_1.hpp     # run_prompt(): asks for a name and age, then greets
+│   ├── prompt_exercise_1.hpp     # run_prompt(): asks for a name and age, then greets
+│   └── prompt_exercise_2.hpp     # run_prompt(): asks for two numbers, then prints the sum
 ├── tests/                        # GoogleTest unit tests
-│   └── test_prompt_exercise_1.cpp
+│   ├── test_prompt_exercise_1.cpp
+│   └── test_prompt_exercise_2.cpp
 ├── build/                        # Compiled programs (created by make, ignored by git)
-├── prompt_exercise_1.cpp         # main() that runs the prompt on stdin/stdout
+├── prompt_exercise_1.cpp         # main() for exercise 1
+├── prompt_exercise_2.cpp         # main() for exercise 2
 ├── Makefile                      # Build, run and test shortcuts
 └── .vscode/                      # Recommended extensions and IntelliSense config
 ```
@@ -51,10 +54,11 @@ cpp-training/
 
 | Command | Description |
 | --- | --- |
-| `make` | Build the program and the tests |
-| `make run` | Build and run the program |
-| `make test` | Build and run the tests |
-| `make test ARGS="--gtest_filter=*Greets*"` | Pass GoogleTest options to the test runner |
+| `make` | Build every exercise and its tests |
+| `make run` | Build and run the first exercise |
+| `make run EX=prompt_exercise_2` | Build and run a specific exercise |
+| `make test` | Build and run all tests, stopping at the first failing exercise |
+| `make test ARGS="--gtest_filter=*Greets*"` | Pass GoogleTest options to every test program |
 | `make clean` | Delete the `build/` folder |
 
 Compiled programs go in `build/` (ignored by git). `make` only rebuilds a
@@ -163,6 +167,9 @@ Switch to `-std=c++20` when exercises need C++20 features (concepts, ranges,
    }
    ```
 
-4. Add build rules for the new program and test to the `Makefile`, following
-   the existing `prompt_exercise_1` rules. Output goes in `build/`, so
+4. Run `make test`. The `Makefile` picks up every `.cpp` in the project root
+   automatically, so no new rules are needed. Output goes in `build/`, so
    nothing needs adding to `.gitignore`.
+
+Each exercise is a separate program, so every header can use the same
+function name (`run_prompt`) without clashing.
