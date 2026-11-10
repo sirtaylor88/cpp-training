@@ -28,17 +28,24 @@ prompted (see `.vscode/extensions.json`):
 - C/C++ Extension Pack (`ms-vscode.cpptools-extension-pack`)
 - Code Runner (`formulahendry.code-runner`)
 
-If VS Code reports `cannot open source file "gtest/gtest.h"` right after
-installing GoogleTest, run **Developer: Reload Window** from the command
+`.vscode/c_cpp_properties.json` configures IntelliSense to match the build
+(`/usr/bin/g++`, C++17, headers in `include/`). If VS Code still reports
+`cannot open source file "gtest/gtest.h"` right after installing GoogleTest, run **Developer: Reload Window** from the command
 palette (Ctrl+Shift+P).
 
 ## Project layout
 
-| File | Description |
-| --- | --- |
-| `prompt_execrcice_1.hpp` | `run_prompt()`: asks for a name and age, then prints a greeting |
-| `prompt_execrcice_1.cpp` | `main()` that runs the prompt on stdin/stdout |
-| `test_prompt_execrcice_1.cpp` | GoogleTest unit tests for `run_prompt()` |
+```text
+cpp-training/
+├── include/                      # Headers with the exercise logic
+│   └── prompt_execrcice_1.hpp    # run_prompt(): asks for a name and age, then greets
+├── tests/                        # GoogleTest unit tests
+│   └── test_prompt_execrcice_1.cpp
+├── build/                        # Compiled programs (created by make, ignored by git)
+├── prompt_execrcice_1.cpp        # main() that runs the prompt on stdin/stdout
+├── Makefile                      # Build, run and test shortcuts
+└── .vscode/                      # Recommended extensions and IntelliSense config
+```
 
 ## Shortcuts (Makefile)
 
@@ -48,16 +55,18 @@ palette (Ctrl+Shift+P).
 | `make run` | Build and run the program |
 | `make test` | Build and run the tests |
 | `make test ARGS="--gtest_filter=*Greets*"` | Pass GoogleTest options to the test runner |
-| `make clean` | Delete the built binaries |
+| `make clean` | Delete the `build/` folder |
 
-`make` only rebuilds a binary when its `.cpp` or `.hpp` file has changed.
+Compiled programs go in `build/` (ignored by git). `make` only rebuilds a
+program when its `.cpp` or `.hpp` file has changed.
 The sections below show the underlying `g++` commands.
 
 ## Build and run
 
 ```sh
-g++ -std=c++17 -Wall -Wextra prompt_execrcice_1.cpp -o prompt_execrcice_1
-./prompt_execrcice_1
+mkdir -p build
+g++ -std=c++17 -Wall -Wextra -Iinclude prompt_execrcice_1.cpp -o build/prompt_execrcice_1
+./build/prompt_execrcice_1
 ```
 
 Example:
@@ -71,15 +80,16 @@ Hello, Alice! You are 30 years old.
 ## Run the tests
 
 ```sh
-g++ -std=c++17 -Wall -Wextra test_prompt_execrcice_1.cpp \
-    -lgtest -lgtest_main -pthread -o test_prompt_execrcice_1
-./test_prompt_execrcice_1
+mkdir -p build
+g++ -std=c++17 -Wall -Wextra -Iinclude tests/test_prompt_execrcice_1.cpp \
+    -lgtest -lgtest_main -pthread -o build/test_prompt_execrcice_1
+./build/test_prompt_execrcice_1
 ```
 
 Run only some tests (similar to `pytest -k`):
 
 ```sh
-./test_prompt_execrcice_1 --gtest_filter='RunPromptTest.Greets*'
+./build/test_prompt_execrcice_1 --gtest_filter='RunPromptTest.Greets*'
 ```
 
 ### Compiler options
@@ -89,6 +99,7 @@ Run only some tests (similar to `pytest -k`):
 | `-std=c++17` | Compile using the C++17 language standard |
 | `-Wall` | Enable the common warnings (unused variables, missing `return`, …) |
 | `-Wextra` | Enable extra warnings on top of `-Wall` (unused parameters, signed/unsigned comparison, …) |
+| `-Iinclude` | Also search `include/` for `#include "..."` headers, so any file can include `prompt_execrcice_1.hpp` |
 | `-lgtest` | Link the GoogleTest library (`libgtest`), which provides `TEST`, `EXPECT_EQ`, … |
 | `-lgtest_main` | Link a ready-made `main()` that runs every `TEST`, so test files need no `main()` |
 | `-pthread` | Enable thread support, which GoogleTest uses internally |
@@ -126,24 +137,32 @@ Switch to `-std=c++20` when exercises need C++20 features (concepts, ranges,
 | `--gtest_repeat=N` | Run the tests `N` times |
 | `--gtest_brief=1` | Print only failing tests |
 
-## Writing new tests
+## Adding a new exercise
 
-Keep logic in a header (`.hpp`) as a function that takes streams instead of
-using `std::cin`/`std::cout` directly, so tests can feed input and capture
-output:
+1. Put the logic in `include/<exercise>.hpp` as a function that takes streams
+   instead of using `std::cin`/`std::cout` directly, so tests can feed input
+   and capture output.
+2. Add `<exercise>.cpp` with a `main()` that calls it with `std::cin` and
+   `std::cout`.
+3. Add tests in `tests/test_<exercise>.cpp`:
 
-```cpp
-#include <gtest/gtest.h>
-#include <sstream>
+   ```cpp
+   #include <gtest/gtest.h>
 
-#include "my_exercise.hpp"
+   #include <sstream>
 
-TEST(MyExerciseTest, DoesSomething) {
-    std::istringstream in("some input\n");
-    std::ostringstream out;
+   #include "my_exercise.hpp"
 
-    run_my_exercise(in, out);
+   TEST(MyExerciseTest, DoesSomething) {
+       std::istringstream in("some input\n");
+       std::ostringstream out;
 
-    EXPECT_EQ(out.str(), "expected output\n");
-}
-```
+       run_my_exercise(in, out);
+
+       EXPECT_EQ(out.str(), "expected output\n");
+   }
+   ```
+
+4. Add build rules for the new program and test to the `Makefile`, following
+   the existing `prompt_execrcice_1` rules. Output goes in `build/`, so
+   nothing needs adding to `.gitignore`.

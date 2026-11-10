@@ -1,21 +1,26 @@
 CXX      := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra
+CXXFLAGS := -std=c++17 -Wall -Wextra -Iinclude
 LDLIBS   := -lgtest -lgtest_main -pthread
 
-APP  := prompt_execrcice_1
-TEST := test_prompt_execrcice_1
+# All compiled programs go in build/, which .gitignore ignores.
+BUILD := build
+APP   := $(BUILD)/prompt_execrcice_1
+TEST  := $(BUILD)/test_prompt_execrcice_1
 
 .PHONY: all run test clean
 
 all: $(APP) $(TEST)
 
 # Build the interactive program.
-$(APP): prompt_execrcice_1.cpp prompt_execrcice_1.hpp
+$(APP): prompt_execrcice_1.cpp include/prompt_execrcice_1.hpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) $< -o $@
 
 # Build the GoogleTest unit tests.
-$(TEST): test_prompt_execrcice_1.cpp prompt_execrcice_1.hpp
+$(TEST): tests/test_prompt_execrcice_1.cpp include/prompt_execrcice_1.hpp | $(BUILD)
 	$(CXX) $(CXXFLAGS) $< $(LDLIBS) -o $@
+
+$(BUILD):
+	mkdir -p $@
 
 run: $(APP)
 	./$(APP)
@@ -25,4 +30,4 @@ test: $(TEST)
 	./$(TEST) $(ARGS)
 
 clean:
-	rm -f $(APP) $(TEST)
+	rm -rf $(BUILD)
