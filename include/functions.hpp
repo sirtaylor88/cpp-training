@@ -16,7 +16,7 @@ inline int triple_number(int n) {
 // * Writes "The triple of <n> is <3n>." to `out`.
 inline void print_triple_number(int n, std::ostream& out) {
     int result = triple_number(n);
-    out << "The triple of " << n << " is " << result << "." << std::endl;
+    out << "The triple of " << n << " is " << result << ".\n";
 }
 
 // * Converts `temp` between Celsius ('C') and Fahrenheit ('F').
@@ -31,7 +31,7 @@ inline double convert_temperature(double temp, char from_unit, char to_unit) {
 // ! No `using namespace std;` in a header: it would leak into every file
 // ! that includes it.
 inline void say_hello(const std::string& name, int age, std::ostream& out) {
-    out << "Hello, " << name << "! You are " << age << " years old." << std::endl;
+    out << "Hello, " << name << "! You are " << age << " years old.\n";
 }
 
 }  // namespace utils

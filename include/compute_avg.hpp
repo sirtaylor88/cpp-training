@@ -32,7 +32,7 @@ inline std::vector<double> random_numbers(std::mt19937& engine,
 inline double compute_average(const std::vector<double>& numbers) {
     // * Start from 0.0 (not 0) so the sum is accumulated as a double.
     double sum = std::accumulate(numbers.begin(), numbers.end(), 0.0);
-    return sum / numbers.size();
+    return sum / static_cast<double>(numbers.size());
 }
 
 // * Writes "Numbers: a b c ..." to `out`.
@@ -41,10 +41,10 @@ inline void print_numbers(const std::vector<double>& numbers, std::ostream& out)
     for (double number : numbers) {
         out << ' ' << number;
     }
-    out << std::endl;
+    out << '\n';
 }
 
 // * Writes the average of `numbers` to `out`.
 inline void print_average(const std::vector<double>& numbers, std::ostream& out) {
-    out << "Average in number list: " << compute_average(numbers) << std::endl;
+    out << "Average in number list: " << compute_average(numbers) << '\n';
 }

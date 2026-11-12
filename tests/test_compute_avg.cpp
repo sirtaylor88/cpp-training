@@ -56,12 +56,12 @@ TEST(ComputeAverageTest, EmptyListGivesNaN) {
 
 TEST(RandomNumbersTest, ReturnsFourNumbersByDefault) {
     std::mt19937 engine(42);
-    EXPECT_EQ(random_numbers(engine).size(), 4u);
+    EXPECT_EQ(random_numbers(engine).size(), 4U);
 }
 
 TEST(RandomNumbersTest, ReturnsRequestedCount) {
     std::mt19937 engine(42);
-    EXPECT_EQ(random_numbers(engine, 10).size(), 10u);
+    EXPECT_EQ(random_numbers(engine, 10).size(), 10U);
     EXPECT_TRUE(random_numbers(engine, 0).empty());
 }
 

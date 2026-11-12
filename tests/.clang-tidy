@@ -1,0 +1,11 @@
+# * Test-only overrides: everything in ../.clang-tidy, minus checks that
+# * don't make sense for unit tests.
+InheritParentConfig: true
+Checks: >
+  -bugprone-random-generator-seed,
+  -bugprone-throwing-static-initialization
+
+# * - random-generator-seed: tests seed std::mt19937 with a constant on purpose,
+# *   so every run gets the same "random" numbers.
+# * - throwing-static-initialization: a `const std::string` constant in a test
+# *   file cannot realistically fail to allocate.

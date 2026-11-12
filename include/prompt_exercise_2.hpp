@@ -21,5 +21,5 @@ inline void run_prompt(std::istream& in, std::ostream& out) {
 
     int sum = a + b;
 
-    out << "The sum of " << a << " and " << b << " is " << sum << "." << std::endl;
+    out << "The sum of " << a << " and " << b << " is " << sum << ".\n";
 }

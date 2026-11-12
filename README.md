@@ -44,7 +44,7 @@ cpp-training/
 │   ├── functions.hpp             # utils:: triple_number(), convert_temperature(), say_hello(): free functions and namespaces
 │   ├── prompt_exercise_1.hpp     # run_prompt(): asks for a name and age, then greets
 │   └── prompt_exercise_2.hpp     # run_prompt(): asks for two numbers, then prints the sum
-├── tests/                        # GoogleTest unit tests
+├── tests/                        # GoogleTest unit tests (+ .clang-tidy overrides)
 │   ├── test_compute_avg.cpp
 │   ├── test_functions.cpp
 │   ├── test_prompt_exercise_1.cpp
@@ -56,6 +56,7 @@ cpp-training/
 ├── prompt_exercise_2.cpp         # main() for exercise 2
 ├── Makefile                      # Build, run, test and coverage shortcuts
 ├── .clang-format                 # Code formatting rules (clang-format)
+├── .clang-tidy                   # Static analysis checks (clang-tidy)
 ├── .pre-commit-config.yaml       # Checks run before every commit
 ├── .github/workflows/ci.yml      # Same checks on GitHub for every push/PR
 └── .vscode/                      # Recommended extensions and IntelliSense config
@@ -71,6 +72,7 @@ cpp-training/
 | `make test` | Build and run all tests, stopping at the first failing exercise |
 | `make test ARGS="--gtest_filter=*Greets*"` | Pass GoogleTest options to every test program |
 | `make coverage` | Run all tests and fail unless every line and branch of `include/` ran |
+| `make lint` | Run clang-tidy static analysis (checks in `.clang-tidy`) |
 | `make clean` | Delete the `build/` folder |
 
 Compiled programs go in `build/` (ignored by git). `make` only rebuilds a
@@ -175,6 +177,8 @@ The annotated reports are kept in `build/coverage/<exercise>.hpp.gcov`.
 
 - trailing whitespace, end-of-file newline, YAML syntax, merge conflict markers
 - `clang-format` on `.cpp`/`.hpp` files, using `.clang-format`
+- `clang-tidy` static analysis (`make lint`), using `.clang-tidy` and
+  `tests/.clang-tidy`; pre-commit installs clang-tidy itself, no `apt` needed
 - `make coverage` when a `.cpp`, `.hpp` or the `Makefile` changed
 
 Install the `pre-commit` command once per machine, then enable the git hook
@@ -202,6 +206,32 @@ other Python packages or pyenv versions.
 If a hook reformats a file, the commit stops: review the change, `git add` it
 and commit again. GitHub Actions (`.github/workflows/ci.yml`) runs the same
 checks on every push and pull request.
+
+## Code conventions
+
+### `'\n'` instead of `std::endl`
+
+`std::endl` writes `'\n'` **and** flushes the stream, forcing a slow write to
+the terminal on every line. clang-tidy (`performance-avoid-endl`) rejects it,
+so end lines with `'\n'` (or put it in the string, e.g. `".\n"`):
+
+```cpp
+out << "The sum is " << sum << ".\n";   // not: << "." << std::endl;
+```
+
+The buffered output still appears when needed:
+
+- before reading input: `std::cin` is tied to `std::cout`, so a prompt such as
+  `"What is your name? "` always shows before the program waits;
+- when the program exits normally, or when the buffer is full.
+
+Flush on purpose only when output must appear immediately, and write it
+explicitly so the reason is visible:
+
+| Situation | Use |
+| --- | --- |
+| Progress message before a long computation | `out << "Working...\n" << std::flush;` |
+| Errors, or messages that must survive a crash | `std::cerr << "error: ...\n";` (unbuffered) |
 
 ## Adding a new exercise
 

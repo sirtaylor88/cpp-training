@@ -14,7 +14,7 @@ TESTS     := $(addprefix $(BUILD)/test_,$(EXERCISES))
 # * Exercise for `make run`, e.g. make run EX=prompt_exercise_2
 EX ?= $(firstword $(EXERCISES))
 
-.PHONY: all run test coverage clean
+.PHONY: all run test coverage lint clean
 
 all: $(APPS) $(TESTS)
 
@@ -62,6 +62,15 @@ coverage:
 	    exit 1; \
 	fi
 	@echo "OK: 100% line and branch coverage of include/"
+
+# * Static analysis with clang-tidy (checks listed in .clang-tidy). Every .cpp
+# * is analyzed, and the headers it includes from include/ along with it.
+# * Run a specific binary with e.g. make lint CLANG_TIDY=clang-tidy-19
+CLANG_TIDY ?= clang-tidy
+
+lint:
+	$(CLANG_TIDY) --quiet $(wildcard *.cpp) $(wildcard tests/*.cpp) -- \
+	    -std=c++17 -Iinclude
 
 clean:
 	rm -rf $(BUILD)

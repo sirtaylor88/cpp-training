@@ -1,0 +1,33 @@
+# * Static analysis checks run by `make lint` and by pre-commit.
+# * List every check that fires on a file: clang-tidy --list-checks
+Checks: >
+  -*,
+  bugprone-*,
+  clang-analyzer-*,
+  modernize-*,
+  performance-*,
+  readability-*,
+  -bugprone-easily-swappable-parameters,
+  -modernize-use-trailing-return-type,
+  -readability-braces-around-statements,
+  -readability-identifier-length,
+  -readability-magic-numbers
+
+# * Disabled above, on purpose:
+# * - easily-swappable-parameters: flags any function taking two values of the
+# *   same type, e.g. convert_temperature(double, char, char).
+# * - braces-around-statements: we allow one-line guard clauses
+# *   (`if (x) return y;`).
+# * - use-trailing-return-type: `auto f() -> int` style isn't used here.
+# * - identifier-length / magic-numbers: too noisy for short exercises.
+
+# * Any warning fails the check.
+WarningsAsErrors: "*"
+
+# * Also report problems in our own headers, but not in gtest or the
+# * standard library.
+HeaderFilterRegex: "include/"
+
+CheckOptions:
+  # * GoogleTest's TEST() macros expand to complex code: don't count it.
+  readability-function-cognitive-complexity.IgnoreMacros: true

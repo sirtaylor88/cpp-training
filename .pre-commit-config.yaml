@@ -16,6 +16,18 @@ repos:
       - id: clang-format
         types_or: [c++]
 
+  # * Static analysis (checks in .clang-tidy). pre-commit installs the
+  # * clang-tidy binary from PyPI, so no system package is needed.
+  - repo: local
+    hooks:
+      - id: clang-tidy
+        name: clang-tidy (make lint)
+        entry: make lint
+        language: python
+        additional_dependencies: [clang-tidy==23.1.4]
+        pass_filenames: false
+        files: \.(cpp|hpp)$|^\.clang-tidy$
+
   # * Builds and runs every test, and requires 100% coverage of include/.
   # * Uses the g++ and GoogleTest installed on this machine.
   - repo: local
