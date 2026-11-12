@@ -55,6 +55,7 @@ cpp-training/
 ├── prompt_exercise_1.cpp         # main() for exercise 1
 ├── prompt_exercise_2.cpp         # main() for exercise 2
 ├── Makefile                      # Build, run, test and coverage shortcuts
+├── CLAUDE.md                     # Notes for Claude Code (commands, conventions)
 ├── .clang-format                 # Code formatting rules (clang-format)
 ├── .clang-tidy                   # Static analysis checks (clang-tidy)
 ├── .pre-commit-config.yaml       # Checks run before every commit
