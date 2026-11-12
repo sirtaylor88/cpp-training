@@ -22,7 +22,7 @@ std::string PrintTriple(int n) {
 // * Runs say_hello() and returns everything it wrote.
 std::string SayHello(const std::string& name, int age) {
     std::ostringstream out;
-    say_hello(name, age, out);
+    utils::say_hello(name, age, out);
     return out.str();
 }
 
