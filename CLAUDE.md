@@ -10,7 +10,7 @@ make test                          # build + run every test program
 make test ARGS="--gtest_filter=*Sum*"
 make coverage                      # tests + must reach 100% line/branch coverage of include/
 make lint                          # clang-tidy (.clang-tidy, tests/.clang-tidy)
-make run EX=prompt_exercise_2      # run one interactive exercise
+make run EX=prompts                # run one interactive exercise
 pre-commit run --all-files         # everything CI runs: format, lint, coverage
 ```
 

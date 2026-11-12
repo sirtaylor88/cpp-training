@@ -11,7 +11,7 @@ EXERCISES := $(basename $(wildcard *.cpp))
 APPS      := $(addprefix $(BUILD)/,$(EXERCISES))
 TESTS     := $(addprefix $(BUILD)/test_,$(EXERCISES))
 
-# * Exercise for `make run`, e.g. make run EX=prompt_exercise_2
+# * Exercise for `make run`, e.g. make run EX=prompts
 EX ?= $(firstword $(EXERCISES))
 
 .PHONY: all run test coverage lint clean

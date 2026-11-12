@@ -40,20 +40,14 @@ palette (Ctrl+Shift+P).
 ```text
 cpp-training/
 ├── include/                      # Headers with the exercise logic
-│   ├── compute_avg.hpp           # random_numbers() + compute_average(): mean of a random list
-│   ├── functions.hpp             # utils:: triple_number(), print<T>(), is_close(), are_equal<T>(), convert_temperature(), say_hello(): free functions, templates and namespaces
-│   ├── prompt_exercise_1.hpp     # run_prompt(): asks for a name and age, then greets
-│   └── prompt_exercise_2.hpp     # run_prompt(): asks for two numbers, then prints the sum
+│   ├── functions.hpp             # utils:: free functions, templates, comparisons, max, random numbers and average
+│   └── prompts.hpp               # greet_prompt(): name and age; sum_prompt(): sum of two numbers
 ├── tests/                        # GoogleTest unit tests (+ .clang-tidy overrides)
-│   ├── test_compute_avg.cpp
 │   ├── test_functions.cpp
-│   ├── test_prompt_exercise_1.cpp
-│   └── test_prompt_exercise_2.cpp
+│   └── test_prompts.cpp
 ├── build/                        # Compiled programs (created by make, ignored by git)
-├── compute_avg.cpp               # main() for the average exercise
-├── functions.cpp                 # main() for the functions/namespaces exercise
-├── prompt_exercise_1.cpp         # main() for exercise 1
-├── prompt_exercise_2.cpp         # main() for exercise 2
+├── functions.cpp                 # main() for the functions exercise
+├── prompts.cpp                   # main() for the prompts exercise
 ├── Makefile                      # Build, run, test and coverage shortcuts
 ├── CLAUDE.md                     # Notes for Claude Code (commands, conventions)
 ├── .clang-format                 # Code formatting rules (clang-format)
@@ -69,7 +63,7 @@ cpp-training/
 | --- | --- |
 | `make` | Build every exercise and its tests |
 | `make run` | Build and run the first exercise |
-| `make run EX=prompt_exercise_2` | Build and run a specific exercise |
+| `make run EX=prompts` | Build and run a specific exercise |
 | `make test` | Build and run all tests, stopping at the first failing exercise |
 | `make test ARGS="--gtest_filter=*Greets*"` | Pass GoogleTest options to every test program |
 | `make coverage` | Run all tests and fail unless every line and branch of `include/` ran |
@@ -84,8 +78,8 @@ The sections below show the underlying `g++` commands.
 
 ```sh
 mkdir -p build
-g++ -std=c++17 -Wall -Wextra -Iinclude prompt_exercise_1.cpp -o build/prompt_exercise_1
-./build/prompt_exercise_1
+g++ -std=c++17 -Wall -Wextra -Iinclude prompts.cpp -o build/prompts
+./build/prompts
 ```
 
 Example:
@@ -94,21 +88,24 @@ Example:
 What is your name? Alice
 What is your age? 30
 Hello, Alice! You are 30 years old.
+Enter first number: 2
+Enter second number: 3
+The sum of 2 and 3 is 5.
 ```
 
 ## Run the tests
 
 ```sh
 mkdir -p build
-g++ -std=c++17 -Wall -Wextra -Iinclude tests/test_prompt_exercise_1.cpp \
-    -lgtest -lgtest_main -pthread -o build/test_prompt_exercise_1
-./build/test_prompt_exercise_1
+g++ -std=c++17 -Wall -Wextra -Iinclude tests/test_prompts.cpp \
+    -lgtest -lgtest_main -pthread -o build/test_prompts
+./build/test_prompts
 ```
 
 Run only some tests (similar to `pytest -k`):
 
 ```sh
-./build/test_prompt_exercise_1 --gtest_filter='RunPromptTest.Greets*'
+./build/test_prompts --gtest_filter='GreetPromptTest.Greets*'
 ```
 
 ### Compiler options
@@ -118,7 +115,7 @@ Run only some tests (similar to `pytest -k`):
 | `-std=c++17` | Compile using the C++17 language standard |
 | `-Wall` | Enable the common warnings (unused variables, missing `return`, …) |
 | `-Wextra` | Enable extra warnings on top of `-Wall` (unused parameters, signed/unsigned comparison, …) |
-| `-Iinclude` | Also search `include/` for `#include "..."` headers, so any file can include `prompt_exercise_1.hpp` |
+| `-Iinclude` | Also search `include/` for `#include "..."` headers, so any file can include `prompts.hpp` |
 | `-lgtest` | Link the GoogleTest library (`libgtest`), which provides `TEST`, `EXPECT_EQ`, … |
 | `-lgtest_main` | Link a ready-made `main()` that runs every `TEST`, so test files need no `main()` |
 | `-pthread` | Enable thread support, which GoogleTest uses internally |
@@ -290,5 +287,6 @@ int main() {
    are needed. Output goes in `build/`, so nothing needs adding to
    `.gitignore`.
 
-Each exercise is a separate program, so every header can use the same
-function name (`run_prompt`) without clashing.
+Each exercise is a separate program with its own `main()`. Functions that
+live in the same header, like `greet_prompt()` and `sum_prompt()` in
+`prompts.hpp`, need different names.
