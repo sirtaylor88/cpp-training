@@ -14,7 +14,7 @@ TESTS     := $(addprefix $(BUILD)/test_,$(EXERCISES))
 # * Exercise for `make run`, e.g. make run EX=prompt_exercise_2
 EX ?= $(firstword $(EXERCISES))
 
-.PHONY: all run test clean
+.PHONY: all run test coverage clean
 
 all: $(APPS) $(TESTS)
 
@@ -36,6 +36,32 @@ run: $(BUILD)/$(EX)
 # Pass GoogleTest options with ARGS, e.g. make test ARGS="--gtest_filter=*Sum*"
 test: $(TESTS)
 	@for t in $(TESTS); do echo "== $$t"; ./$$t $(ARGS) || exit 1; done
+
+# * Build every test with gcov instrumentation, run it, and fail unless every
+# * line and branch of include/<name>.hpp ran.
+# * -fkeep-inline-functions: header functions are `inline`, so without it an
+# * untested function is never compiled and silently missing from the report.
+# * Ignored on purpose: `=====` lines and `(throw)` branches, which only run
+# * when the standard library throws (e.g. out of memory).
+COVERAGE := $(BUILD)/coverage
+COVFLAGS := -O0 --coverage -fkeep-inline-functions
+
+coverage:
+	@rm -rf $(COVERAGE) && mkdir -p $(COVERAGE)
+	@for ex in $(EXERCISES); do \
+	    $(CXX) $(CXXFLAGS) $(COVFLAGS) tests/test_$$ex.cpp $(LDLIBS) \
+	        -o $(COVERAGE)/test_$$ex || exit 1; \
+	    ./$(COVERAGE)/test_$$ex --gtest_brief=1 || exit 1; \
+	    gcov -t -b -o $(COVERAGE) $(COVERAGE)/test_$$ex.gcda 2>/dev/null \
+	        | awk -v f=include/$$ex.hpp '/:Source:/ { p = index($$0, f) > 0 } p' \
+	        > $(COVERAGE)/$$ex.hpp.gcov; \
+	done
+	@if grep -nE '#####|branch +[0-9]+ (never executed|taken 0%)$$' \
+	        $(COVERAGE)/*.hpp.gcov; then \
+	    echo "FAIL: coverage below 100% (lines/branches listed above never ran)"; \
+	    exit 1; \
+	fi
+	@echo "OK: 100% line and branch coverage of include/"
 
 clean:
 	rm -rf $(BUILD)

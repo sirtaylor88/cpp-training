@@ -52,7 +52,7 @@ cpp-training/
 ├── functions.cpp                 # main() for the functions/namespaces exercise
 ├── prompt_exercise_1.cpp         # main() for exercise 1
 ├── prompt_exercise_2.cpp         # main() for exercise 2
-├── Makefile                      # Build, run and test shortcuts
+├── Makefile                      # Build, run, test and coverage shortcuts
 └── .vscode/                      # Recommended extensions and IntelliSense config
 ```
 
@@ -65,6 +65,7 @@ cpp-training/
 | `make run EX=prompt_exercise_2` | Build and run a specific exercise |
 | `make test` | Build and run all tests, stopping at the first failing exercise |
 | `make test ARGS="--gtest_filter=*Greets*"` | Pass GoogleTest options to every test program |
+| `make coverage` | Run all tests and fail unless every line and branch of `include/` ran |
 | `make clean` | Delete the `build/` folder |
 
 Compiled programs go in `build/` (ignored by git). `make` only rebuilds a
@@ -147,6 +148,21 @@ Switch to `-std=c++20` when exercises need C++20 features (concepts, ranges,
 | `--gtest_repeat=N` | Run the tests `N` times |
 | `--gtest_brief=1` | Print only failing tests |
 
+## Test coverage
+
+`make coverage` rebuilds the tests with `--coverage`, runs them, and uses
+`gcov` to check that every line and branch in `include/*.hpp` was executed.
+It prints any line (`#####`) or branch (`taken 0%`) that never ran and fails.
+The annotated reports are kept in `build/coverage/<exercise>.hpp.gcov`.
+
+- `-fkeep-inline-functions` is needed because every function here is
+  `inline`: without it, a function no test calls is never compiled and would
+  silently not count as uncovered.
+- Code that only runs when the standard library throws (marked `=====` and
+  `(throw)` by gcov) is ignored, as it cannot realistically be tested.
+- The `main()` files in the project root are not measured: keep them thin and
+  put the logic in the headers.
+
 ## Adding a new exercise
 
 1. Put the logic in `include/<exercise>.hpp` as a function that takes streams
@@ -173,9 +189,9 @@ Switch to `-std=c++20` when exercises need C++20 features (concepts, ranges,
    }
    ```
 
-4. Run `make test`. The `Makefile` picks up every `.cpp` in the project root
-   automatically, so no new rules are needed. Output goes in `build/`, so
-   nothing needs adding to `.gitignore`.
+4. Run `make coverage`. The `Makefile` picks up every `.cpp` in the project
+   root automatically, so no new rules are needed. Output goes in `build/`,
+   so nothing needs adding to `.gitignore`.
 
 Each exercise is a separate program, so every header can use the same
 function name (`run_prompt`) without clashing.
