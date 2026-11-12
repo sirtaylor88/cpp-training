@@ -13,10 +13,13 @@ inline int triple_number(int n) {
     return n * 3;
 }
 
-// * Writes "The triple of <n> is <3n>." to `out`.
-inline void print_triple_number(int n, std::ostream& out) {
-    int result = triple_number(n);
-    out << "The triple of " << n << " is " << result << ".\n";
+// * Writes `value` followed by a newline to `out`.
+// * A template: works with any type that supports `out << value`
+// * (int, double, std::string, ...). The compiler generates one version per
+// * type it is called with. Templates are implicitly inline.
+template <typename T>
+void print(const T& value, std::ostream& out) {
+    out << value << '\n';
 }
 
 // * Converts `temp` between Celsius ('C') and Fahrenheit ('F').

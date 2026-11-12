@@ -41,7 +41,7 @@ palette (Ctrl+Shift+P).
 cpp-training/
 ├── include/                      # Headers with the exercise logic
 │   ├── compute_avg.hpp           # random_numbers() + compute_average(): mean of a random list
-│   ├── functions.hpp             # utils:: triple_number(), convert_temperature(), say_hello(): free functions and namespaces
+│   ├── functions.hpp             # utils:: triple_number(), print<T>(), convert_temperature(), say_hello(): free functions, templates and namespaces
 │   ├── prompt_exercise_1.hpp     # run_prompt(): asks for a name and age, then greets
 │   └── prompt_exercise_2.hpp     # run_prompt(): asks for two numbers, then prints the sum
 ├── tests/                        # GoogleTest unit tests (+ .clang-tidy overrides)

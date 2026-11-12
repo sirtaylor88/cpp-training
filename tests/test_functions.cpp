@@ -1,5 +1,5 @@
-// * Unit tests for triple_number(), print_triple_number(), convert_temperature()
-// * and say_hello() in functions.hpp.
+// * Unit tests for triple_number(), print(), convert_temperature() and
+// * say_hello() in functions.hpp.
 
 // * Google Test
 #include <gtest/gtest.h>
@@ -12,10 +12,11 @@
 
 namespace {
 
-// * Runs print_triple_number() on `n` and returns everything it wrote.
-std::string PrintTriple(int n) {
+// * Runs print() on `value` and returns everything it wrote.
+template <typename T>
+std::string Print(const T& value) {
     std::ostringstream out;
-    utils::print_triple_number(n, out);
+    utils::print(value, out);
     return out.str();
 }
 
@@ -42,16 +43,24 @@ TEST(TripleNumberTest, TriplesOne) {
     EXPECT_EQ(utils::triple_number(1), 3);
 }
 
-TEST(PrintTripleNumberTest, PrintsDefaultExample) {
-    EXPECT_EQ(PrintTriple(5), "The triple of 5 is 15.\n");
+TEST(PrintTest, PrintsInt) {
+    EXPECT_EQ(Print(15), "15\n");
+    EXPECT_EQ(Print(-6), "-6\n");
+    EXPECT_EQ(Print(0), "0\n");
 }
 
-TEST(PrintTripleNumberTest, PrintsNegativeNumber) {
-    EXPECT_EQ(PrintTriple(-2), "The triple of -2 is -6.\n");
+TEST(PrintTest, PrintsDouble) {
+    EXPECT_EQ(Print(212.0), "212\n");
+    EXPECT_EQ(Print(6.05), "6.05\n");
 }
 
-TEST(PrintTripleNumberTest, PrintsZero) {
-    EXPECT_EQ(PrintTriple(0), "The triple of 0 is 0.\n");
+TEST(PrintTest, PrintsString) {
+    EXPECT_EQ(Print(std::string("Hello")), "Hello\n");
+    EXPECT_EQ(Print("C-string"), "C-string\n");
+}
+
+TEST(PrintTest, PrintsResultOfAnotherFunction) {
+    EXPECT_EQ(Print(utils::triple_number(5)), "15\n");
 }
 
 TEST(ConvertTemperatureTest, CelsiusToFahrenheit) {
