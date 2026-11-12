@@ -1,5 +1,5 @@
-// * Unit tests for triple_number(), print(), convert_temperature() and
-// * say_hello() in functions.hpp.
+// * Unit tests for triple_number(), print(), is_close(), are_equal(),
+// * convert_temperature() and say_hello() in functions.hpp.
 
 // * Google Test
 #include <gtest/gtest.h>
@@ -61,6 +61,57 @@ TEST(PrintTest, PrintsString) {
 
 TEST(PrintTest, PrintsResultOfAnotherFunction) {
     EXPECT_EQ(Print(utils::triple_number(5)), "15\n");
+}
+
+TEST(IsCloseTest, AcceptsRoundingErrors) {
+    EXPECT_TRUE(utils::is_close(0.1 + 0.2, 0.3));
+    EXPECT_TRUE(utils::is_close(0.1 + 0.2 - 0.3, 0.0));
+}
+
+TEST(IsCloseTest, RejectsRealDifferences) {
+    EXPECT_FALSE(utils::is_close(1.0, 1.001));
+    EXPECT_FALSE(utils::is_close(0.0000001, 0.0));
+}
+
+TEST(AreEqualTest, ComparesInts) {
+    EXPECT_TRUE(utils::are_equal(15, 15));
+    EXPECT_FALSE(utils::are_equal(15, -15));
+}
+
+TEST(AreEqualTest, ComparesDoubles) {
+    EXPECT_TRUE(utils::are_equal(212.0, 212.0));
+    EXPECT_FALSE(utils::are_equal(212.0, 100.0));
+}
+
+TEST(AreEqualTest, IgnoresRoundingErrors) {
+    // * 0.1 + 0.2 is 0.30000000000000004, so `==` would say false.
+    EXPECT_TRUE(utils::are_equal(0.1 + 0.2, 0.3));
+    // * Relative tolerance: large numbers that differ only by rounding.
+    EXPECT_TRUE(utils::are_equal(1e20, 1e20 * (1 + 1e-15)));
+    // * Absolute tolerance: a tiny rounding leftover is equal to 0.
+    EXPECT_TRUE(utils::are_equal(0.1 + 0.2 - 0.3, 0.0));
+}
+
+TEST(AreEqualTest, KeepsSmallButRealDifferences) {
+    // * Converting to strings with 6 decimals would call all of these equal.
+    EXPECT_FALSE(utils::are_equal(0.0000004, 0.0000001));
+    EXPECT_FALSE(utils::are_equal(0.0000001, 0.0));
+    EXPECT_FALSE(utils::are_equal(0.3000005, 0.3000004));
+}
+
+TEST(AreEqualTest, ComparesFloats) {
+    EXPECT_TRUE(utils::are_equal(0.5F, 0.5F));
+    EXPECT_FALSE(utils::are_equal(0.5F, 0.25F));
+}
+
+TEST(AreEqualTest, ComparesStrings) {
+    EXPECT_TRUE(utils::are_equal(std::string("Alice"), std::string("Alice")));
+    EXPECT_FALSE(utils::are_equal(std::string("Alice"), std::string("alice")));
+}
+
+TEST(AreEqualTest, ComparesResultOfAnotherFunction) {
+    EXPECT_TRUE(utils::are_equal(utils::triple_number(5), 15));
+    EXPECT_TRUE(utils::are_equal(utils::convert_temperature(100.0, 'C', 'F'), 212.0));
 }
 
 TEST(ConvertTemperatureTest, CelsiusToFahrenheit) {
