@@ -41,7 +41,7 @@ palette (Ctrl+Shift+P).
 cpp-training/
 ├── include/                      # Headers with the exercise logic
 │   ├── functions.hpp             # utils:: free functions, templates, comparisons, max, random numbers and average
-│   └── prompts.hpp               # greet_prompt(): name and age; sum_prompt(): sum of two numbers
+│   └── prompts.hpp               # greet_prompt(), sum_prompt(), max_prompt(): interactive prompts
 ├── tests/                        # GoogleTest unit tests (+ .clang-tidy overrides)
 │   ├── test_functions.cpp
 │   └── test_prompts.cpp
@@ -91,6 +91,11 @@ Hello, Alice! You are 30 years old.
 Enter first number: 2
 Enter second number: 3
 The sum of 2 and 3 is 5.
+Enter a number (q to stop): 4
+Enter a number (q to stop): 9
+Enter a number (q to stop): 2
+Enter a number (q to stop): q
+The max value is 9.
 ```
 
 ## Run the tests

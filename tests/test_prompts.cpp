@@ -1,4 +1,4 @@
-// * Unit tests for greet_prompt() and sum_prompt() in prompts.hpp.
+// * Unit tests for greet_prompt(), sum_prompt() and max_prompt() in prompts.hpp.
 
 // * Google Test
 #include <gtest/gtest.h>
@@ -19,6 +19,16 @@ namespace {
 // * The prefix "k" indicates that this is a constant variable.
 const std::string kGreetPrompts = "What is your name? What is your age? ";
 const std::string kSumPrompts = "Enter first number: Enter second number: ";
+// * max_prompt() repeats the same prompt for every number, plus once for the
+// * input that stops it.
+const std::string kMaxPrompt = "Enter a number (q to stop): ";
+
+// * Returns kMaxPrompt repeated `count` times.
+std::string MaxPrompts(int count) {
+    std::string prompts;
+    for (int i = 0; i < count; ++i) prompts += kMaxPrompt;
+    return prompts;
+}
 
 // * Signature shared by greet_prompt() and sum_prompt(): a pointer to a
 // * function taking (std::istream&, std::ostream&) and returning nothing.
@@ -104,6 +114,46 @@ TEST(SumPromptTest, NonNumericFirstNumberYieldsZeros) {
     // * initial value too.
     EXPECT_EQ(RunWithInput(sum_prompt, "abc 5\n"),
               kSumPrompts + "The sum of 0 and 0 is 0.\n");
+}
+
+TEST(MaxPromptTest, StopsAtQAndPrintsLargestNumber) {
+    EXPECT_EQ(RunWithInput(max_prompt, "4 9 2 7 5 q\n"),
+              MaxPrompts(6) + "The max value is 9.\n");
+}
+
+TEST(MaxPromptTest, AcceptsNumbersOnSeparateLines) {
+    EXPECT_EQ(RunWithInput(max_prompt, "1\n2\n3\nq\n"),
+              MaxPrompts(4) + "The max value is 3.\n");
+}
+
+TEST(MaxPromptTest, StopsAtAnyNonNumber) {
+    EXPECT_EQ(RunWithInput(max_prompt, "8 1 stop\n"),
+              MaxPrompts(3) + "The max value is 8.\n");
+}
+
+TEST(MaxPromptTest, StopsAtEndOfInput) {
+    // * Like pressing Ctrl+D in the terminal.
+    EXPECT_EQ(RunWithInput(max_prompt, "3 8"), MaxPrompts(3) + "The max value is 8.\n");
+}
+
+TEST(MaxPromptTest, HandlesAllNegativeNumbers) {
+    EXPECT_EQ(RunWithInput(max_prompt, "-8 -3 -5 q\n"),
+              MaxPrompts(4) + "The max value is -3.\n");
+}
+
+TEST(MaxPromptTest, StoppingImmediatelyPrintsNoNumbers) {
+    EXPECT_EQ(RunWithInput(max_prompt, "q\n"), MaxPrompts(1) + "No numbers entered.\n");
+    EXPECT_EQ(RunWithInput(max_prompt, ""), MaxPrompts(1) + "No numbers entered.\n");
+}
+
+TEST(MaxPromptTest, LeavesStreamUsableForNextPrompt) {
+    // * After `q`, the same input stream must still work for sum_prompt().
+    std::istringstream in("5 q\n2 3\n");
+    std::ostringstream out;
+    max_prompt(in, out);
+    sum_prompt(in, out);
+    EXPECT_EQ(out.str(), MaxPrompts(2) + "The max value is 5.\n" + kSumPrompts +
+                             "The sum of 2 and 3 is 5.\n");
 }
 
 }  // namespace

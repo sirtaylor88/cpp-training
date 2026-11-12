@@ -2,12 +2,18 @@
 // * output stream:
 // * - greet_prompt(): asks for a name and an age, then greets the user.
 // * - sum_prompt(): asks for two numbers, then prints their sum.
+// * - max_prompt(): asks for numbers until the user stops, then prints the
+// *   largest.
 
 // * `include` this header file (.hpp) only once per .cpp file being compiled
 #pragma once
 
 #include <iostream>
+#include <limits>
 #include <string>
+#include <vector>
+
+#include "functions.hpp"
 
 // * Prompts for a name and an age, then writes a greeting to `out`.
 inline void greet_prompt(std::istream& in, std::ostream& out) {
@@ -38,4 +44,29 @@ inline void sum_prompt(std::istream& in, std::ostream& out) {
     int sum = a + b;
 
     out << "The sum of " << a << " and " << b << " is " << sum << ".\n";
+}
+
+// * Prompts for numbers until the user types anything that isn't a number
+// * (e.g. `q`) or ends the input (Ctrl+D), then writes the largest to `out`.
+inline void max_prompt(std::istream& in, std::ostream& out) {
+    std::vector<int> numbers;
+    int number = 0;
+    while (true) {
+        out << "Enter a number (q to stop): ";
+        // * `in >> number` is false when the input isn't a number or has ended.
+        if (!(in >> number)) break;
+        numbers.push_back(number);
+    }
+
+    // * Make the stream usable again for later reads: clear the error left
+    // * by the stop input, then skip the rest of that line (the `q`).
+    in.clear();
+    in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    // * Guard clause: utils::max_value() throws on an empty list.
+    if (numbers.empty()) {
+        out << "No numbers entered.\n";
+        return;
+    }
+    out << "The max value is " << utils::max_value(numbers) << ".\n";
 }
