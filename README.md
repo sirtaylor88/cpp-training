@@ -39,14 +39,17 @@ palette (Ctrl+Shift+P).
 cpp-training/
 ├── include/                      # Headers with the exercise logic
 │   ├── compute_avg.hpp           # compute_average(): mean of a list of numbers
+│   ├── functions.hpp             # say_hello() and number_utils::triple_number(): free functions and namespaces
 │   ├── prompt_exercise_1.hpp     # run_prompt(): asks for a name and age, then greets
 │   └── prompt_exercise_2.hpp     # run_prompt(): asks for two numbers, then prints the sum
 ├── tests/                        # GoogleTest unit tests
 │   ├── test_compute_avg.cpp
+│   ├── test_functions.cpp
 │   ├── test_prompt_exercise_1.cpp
 │   └── test_prompt_exercise_2.cpp
 ├── build/                        # Compiled programs (created by make, ignored by git)
 ├── compute_avg.cpp               # main() for the average exercise
+├── functions.cpp                 # main() for the functions/namespaces exercise
 ├── prompt_exercise_1.cpp         # main() for exercise 1
 ├── prompt_exercise_2.cpp         # main() for exercise 2
 ├── Makefile                      # Build, run and test shortcuts
