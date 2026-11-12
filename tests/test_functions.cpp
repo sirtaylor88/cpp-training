@@ -1,5 +1,5 @@
-// * Unit tests for triple_number(), print_triple_number() and say_hello()
-// * in functions.hpp.
+// * Unit tests for triple_number(), print_triple_number(), convert_temperature()
+// * and say_hello() in functions.hpp.
 
 // * Google Test
 #include <gtest/gtest.h>
@@ -52,6 +52,25 @@ TEST(PrintTripleNumberTest, PrintsNegativeNumber) {
 
 TEST(PrintTripleNumberTest, PrintsZero) {
     EXPECT_EQ(PrintTriple(0), "The triple of 0 is 0.\n");
+}
+
+TEST(ConvertTemperatureTest, CelsiusToFahrenheit) {
+    EXPECT_DOUBLE_EQ(utils::convert_temperature(100.0, 'C', 'F'), 212.0);
+    EXPECT_DOUBLE_EQ(utils::convert_temperature(-40.0, 'C', 'F'), -40.0);
+}
+
+TEST(ConvertTemperatureTest, FahrenheitToCelsius) {
+    EXPECT_DOUBLE_EQ(utils::convert_temperature(32.0, 'F', 'C'), 0.0);
+    EXPECT_DOUBLE_EQ(utils::convert_temperature(212.0, 'F', 'C'), 100.0);
+}
+
+TEST(ConvertTemperatureTest, SameUnitReturnsInput) {
+    EXPECT_DOUBLE_EQ(utils::convert_temperature(25.0, 'C', 'C'), 25.0);
+    EXPECT_DOUBLE_EQ(utils::convert_temperature(77.0, 'F', 'F'), 77.0);
+}
+
+TEST(ConvertTemperatureTest, UnknownUnitReturnsInput) {
+    EXPECT_DOUBLE_EQ(utils::convert_temperature(10.0, 'K', 'C'), 10.0);
 }
 
 TEST(SayHelloTest, GreetsDefaultExample) {
