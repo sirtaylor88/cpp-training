@@ -31,6 +31,12 @@ int main() {
         cout << "Max of {4, 9, 2, 7}: ";
         utils::print(utils::max_value(numbers), cout);
 
+        vector<int> extended{1, 2};
+        utils::extend(extended, {3, 4});
+        cout << "{1, 2} extended with {3, 4}:";
+        for (int n : extended) cout << ' ' << n;
+        cout << '\n';
+
         // * Seed the engine from the OS so each run gives different numbers.
         mt19937 engine(random_device{}());
         const vector<double> random_list = utils::random_numbers(engine);

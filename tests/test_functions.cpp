@@ -1,5 +1,5 @@
 // * Unit tests for functions.hpp: triple_number(), print(), is_close(),
-// * are_equal(), max_value(), convert_temperature(), say_hello(),
+// * are_equal(), max_value(), extend(), convert_temperature(), say_hello(),
 // * random_numbers(), compute_average(), print_numbers() and print_average().
 
 // * Google Test
@@ -151,6 +151,48 @@ TEST(MaxValueTest, ThrowsOnEmptyList) {
     EXPECT_THROW(utils::max_value(std::vector<int>{}), std::invalid_argument);
     EXPECT_THROW(utils::max_value(std::vector<double>{}), std::invalid_argument);
     EXPECT_THROW(utils::max_value(std::vector<std::string>{}), std::invalid_argument);
+}
+
+TEST(ExtendTest, AppendsAtTheEnd) {
+    std::vector<int> values{1, 2};
+    utils::extend(values, {3, 4, 5});
+    EXPECT_EQ(values, (std::vector<int>{1, 2, 3, 4, 5}));
+}
+
+TEST(ExtendTest, EmptyExtraChangesNothing) {
+    std::vector<int> values{1, 2};
+    utils::extend(values, {});
+    EXPECT_EQ(values, (std::vector<int>{1, 2}));
+}
+
+TEST(ExtendTest, ExtendsEmptyList) {
+    std::vector<int> values;
+    utils::extend(values, {7, 8});
+    EXPECT_EQ(values, (std::vector<int>{7, 8}));
+}
+
+TEST(ExtendTest, LeavesExtraUnchanged) {
+    std::vector<int> values{1};
+    const std::vector<int> extra{2, 3};
+    utils::extend(values, extra);
+    EXPECT_EQ(extra, (std::vector<int>{2, 3}));
+}
+
+TEST(ExtendTest, ExtendsWithItself) {
+    // * Like Python's a.extend(a): the list is doubled.
+    std::vector<int> values{1, 2, 3};
+    utils::extend(values, values);
+    EXPECT_EQ(values, (std::vector<int>{1, 2, 3, 1, 2, 3}));
+}
+
+TEST(ExtendTest, WorksWithDoublesAndStrings) {
+    std::vector<double> doubles{1.5};
+    utils::extend(doubles, {2.5});
+    EXPECT_EQ(doubles, (std::vector<double>{1.5, 2.5}));
+
+    std::vector<std::string> words{"hello"};
+    utils::extend(words, {"world"});
+    EXPECT_EQ(words, (std::vector<std::string>{"hello", "world"}));
 }
 
 TEST(ConvertTemperatureTest, CelsiusToFahrenheit) {

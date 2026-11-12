@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cmath>
 #include <iostream>
+#include <iterator>
 #include <numeric>
 #include <random>
 #include <stdexcept>
@@ -73,6 +74,18 @@ T max_value(const std::vector<T>& values) {
     // * std::max_element returns an iterator (a position) to the largest
     // * element; `*` reads the value at that position.
     return *std::max_element(values.begin(), values.end());
+}
+
+// * Appends every element of `extra` to the end of `values`, in place, like
+// * Python's list.extend(). Works with lists of any type.
+// * `extra` is taken by value (a copy), which keeps extend(v, v) safe:
+// * inserting a vector into itself directly is undefined behavior in C++.
+// * The copy's elements are then moved, not copied again, into `values`.
+// * Pass std::move(list) when you no longer need `list`, to skip the copy.
+template <typename T>
+void extend(std::vector<T>& values, std::vector<T> extra) {
+    values.insert(values.end(), std::make_move_iterator(extra.begin()),
+                  std::make_move_iterator(extra.end()));
 }
 
 // * Converts `temp` between Celsius ('C') and Fahrenheit ('F').

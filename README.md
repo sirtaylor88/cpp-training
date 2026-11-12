@@ -40,7 +40,7 @@ palette (Ctrl+Shift+P).
 ```text
 cpp-training/
 ├── include/                      # Headers with the exercise logic
-│   ├── functions.hpp             # utils:: free functions, templates, comparisons, max, random numbers and average
+│   ├── functions.hpp             # utils:: free functions, templates, comparisons, max, extend, random numbers and average
 │   └── prompts.hpp               # greet_prompt(), sum_prompt(), max_prompt(): interactive prompts
 ├── tests/                        # GoogleTest unit tests (+ .clang-tidy overrides)
 │   ├── test_functions.cpp
