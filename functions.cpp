@@ -2,8 +2,10 @@
 
 #include "functions.hpp"
 
+using namespace std;
+
 int main() {
-    say_hello("Alice", 30, std::cout);
-    number_utils::print_triple_number(5, std::cout);
+    say_hello("Alice", 30, cout);
+    number_utils::print_triple_number(5, cout);
     return 0;
 }
