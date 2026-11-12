@@ -14,10 +14,12 @@ Tested on Ubuntu 22.04 (WSL2).
 
 - **g++** (C++17 or later)
 - **GoogleTest** for unit tests
+- **uv** (optional) to install [pre-commit](#pre-commit-hooks)
 
 ```sh
 sudo apt update
 sudo apt install -y g++ libgtest-dev
+curl -LsSf https://astral.sh/uv/install.sh | sh   # optional: uv
 ```
 
 ### VS Code (optional)
@@ -53,6 +55,9 @@ cpp-training/
 ├── prompt_exercise_1.cpp         # main() for exercise 1
 ├── prompt_exercise_2.cpp         # main() for exercise 2
 ├── Makefile                      # Build, run, test and coverage shortcuts
+├── .clang-format                 # Code formatting rules (clang-format)
+├── .pre-commit-config.yaml       # Checks run before every commit
+├── .github/workflows/ci.yml      # Same checks on GitHub for every push/PR
 └── .vscode/                      # Recommended extensions and IntelliSense config
 ```
 
@@ -163,6 +168,41 @@ The annotated reports are kept in `build/coverage/<exercise>.hpp.gcov`.
 - The `main()` files in the project root are not measured: keep them thin and
   put the logic in the headers.
 
+## Pre-commit hooks
+
+[pre-commit](https://pre-commit.com/) runs checks before every `git commit`
+(see `.pre-commit-config.yaml`):
+
+- trailing whitespace, end-of-file newline, YAML syntax, merge conflict markers
+- `clang-format` on `.cpp`/`.hpp` files, using `.clang-format`
+- `make coverage` when a `.cpp`, `.hpp` or the `Makefile` changed
+
+Install the `pre-commit` command once per machine, then enable the git hook
+once per clone:
+
+```sh
+uv tool install pre-commit   # once per machine (or: pip install pre-commit)
+pre-commit install           # once per clone: adds .git/hooks/pre-commit
+pre-commit run --all-files   # optional: check every file now
+```
+
+`uv tool install` works like `pipx`: it puts pre-commit in its own virtual
+environment (`~/.local/share/uv/tools/`) and the `pre-commit` command in
+`~/.local/bin/`, so it is available in every repo and never conflicts with
+other Python packages or pyenv versions.
+
+| Command | Description |
+| --- | --- |
+| `uv tool list` | Show tools installed with uv |
+| `uv tool upgrade pre-commit` | Update pre-commit (`--all` updates every tool) |
+| `uv tool uninstall pre-commit` | Remove pre-commit and its environment |
+| `pre-commit autoupdate` | Update the hook versions (`rev:`) in `.pre-commit-config.yaml` |
+| `git commit --no-verify` | Skip the hooks for one commit (CI still runs them) |
+
+If a hook reformats a file, the commit stops: review the change, `git add` it
+and commit again. GitHub Actions (`.github/workflows/ci.yml`) runs the same
+checks on every push and pull request.
+
 ## Adding a new exercise
 
 1. Put the logic in `include/<exercise>.hpp` as a function that takes streams
@@ -189,9 +229,10 @@ The annotated reports are kept in `build/coverage/<exercise>.hpp.gcov`.
    }
    ```
 
-4. Run `make coverage`. The `Makefile` picks up every `.cpp` in the project
-   root automatically, so no new rules are needed. Output goes in `build/`,
-   so nothing needs adding to `.gitignore`.
+4. Run `make coverage` (or just commit: pre-commit runs it). The `Makefile`
+   picks up every `.cpp` in the project root automatically, so no new rules
+   are needed. Output goes in `build/`, so nothing needs adding to
+   `.gitignore`.
 
 Each exercise is a separate program, so every header can use the same
 function name (`run_prompt`) without clashing.

@@ -1,0 +1,14 @@
+# * Formatting rules for clang-format (run automatically by pre-commit).
+# * Google style, adjusted to match the existing code.
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 88
+# * Keep include groups (gtest / standard library / project) as written:
+# * only sort inside each group, never merge them.
+IncludeBlocks: Preserve
+# * Keep function bodies on their own line, but allow one-line guard
+# * clauses such as `if (x) return y;` (Google's default).
+AllowShortFunctionsOnASingleLine: Empty
+# * When a function's parameters don't fit on one line, put one per line
+# * instead of packing several onto each line.
+BinPackParameters: OnePerLine

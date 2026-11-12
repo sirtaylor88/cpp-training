@@ -1,0 +1,28 @@
+# * Checks run on every `git commit` (after `pre-commit install`).
+# * Run them on every file by hand: pre-commit run --all-files
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-merge-conflict
+
+  # * Reformats .cpp/.hpp files using .clang-format.
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v23.1.5
+    hooks:
+      - id: clang-format
+        types_or: [c++]
+
+  # * Builds and runs every test, and requires 100% coverage of include/.
+  # * Uses the g++ and GoogleTest installed on this machine.
+  - repo: local
+    hooks:
+      - id: coverage
+        name: tests + 100% coverage (make coverage)
+        entry: make coverage
+        language: system
+        pass_filenames: false
+        files: \.(cpp|hpp)$|^Makefile$
