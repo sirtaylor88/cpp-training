@@ -18,6 +18,6 @@ inline void run_prompt(std::istream& in, std::ostream& out) {
     out << "What is your age? ";
     in >> user_age;
 
-    out << "Hello, " << username
-        << "! You are " << user_age << " years old." << std::endl;
+    out << "Hello, " << username << "! You are " << user_age << " years old."
+        << std::endl;
 }

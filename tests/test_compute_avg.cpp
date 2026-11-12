@@ -26,28 +26,28 @@ std::string PrintAverage(const std::vector<double>& numbers) {
 // * rounding errors, e.g. 0.1 + 0.2 != 0.3 exactly.
 
 TEST(ComputeAverageTest, AveragesDefaultList) {
-    EXPECT_DOUBLE_EQ(compute_average({ 4.4, 5.5, 6.6, 7.7 }), 6.05);
+    EXPECT_DOUBLE_EQ(compute_average({4.4, 5.5, 6.6, 7.7}), 6.05);
 }
 
 TEST(ComputeAverageTest, SingleNumberIsItsOwnAverage) {
-    EXPECT_DOUBLE_EQ(compute_average({ 42.0 }), 42.0);
+    EXPECT_DOUBLE_EQ(compute_average({42.0}), 42.0);
 }
 
 TEST(ComputeAverageTest, AveragesWholeNumbersToFraction) {
     // * Would give 1 with integer division; 0.0 start value keeps it a double.
-    EXPECT_DOUBLE_EQ(compute_average({ 1.0, 2.0 }), 1.5);
+    EXPECT_DOUBLE_EQ(compute_average({1.0, 2.0}), 1.5);
 }
 
 TEST(ComputeAverageTest, AveragesNegativeNumbers) {
-    EXPECT_DOUBLE_EQ(compute_average({ -2.0, -4.0, -6.0 }), -4.0);
+    EXPECT_DOUBLE_EQ(compute_average({-2.0, -4.0, -6.0}), -4.0);
 }
 
 TEST(ComputeAverageTest, MixedSignsCanCancelOut) {
-    EXPECT_DOUBLE_EQ(compute_average({ -3.5, 3.5 }), 0.0);
+    EXPECT_DOUBLE_EQ(compute_average({-3.5, 3.5}), 0.0);
 }
 
 TEST(ComputeAverageTest, AllZerosGiveZero) {
-    EXPECT_DOUBLE_EQ(compute_average({ 0.0, 0.0, 0.0 }), 0.0);
+    EXPECT_DOUBLE_EQ(compute_average({0.0, 0.0, 0.0}), 0.0);
 }
 
 TEST(ComputeAverageTest, EmptyListGivesNaN) {
@@ -88,7 +88,7 @@ TEST(RandomNumbersTest, AverageIsWithinRange) {
 
 TEST(PrintNumbersTest, PrintsEachNumberAfterLabel) {
     std::ostringstream out;
-    print_numbers({ 4.4, 5.5, -1.0 }, out);
+    print_numbers({4.4, 5.5, -1.0}, out);
     EXPECT_EQ(out.str(), "Numbers: 4.4 5.5 -1\n");
 }
 
@@ -99,13 +99,12 @@ TEST(PrintNumbersTest, PrintsOnlyLabelForEmptyList) {
 }
 
 TEST(PrintAverageTest, PrintsDefaultList) {
-    EXPECT_EQ(PrintAverage({ 4.4, 5.5, 6.6, 7.7 }),
-              "Average in number list: 6.05\n");
+    EXPECT_EQ(PrintAverage({4.4, 5.5, 6.6, 7.7}), "Average in number list: 6.05\n");
 }
 
 TEST(PrintAverageTest, PrintsWholeNumberWithoutDecimals) {
     // * `std::cout` uses the default format, so 5.0 prints as "5".
-    EXPECT_EQ(PrintAverage({ 4.0, 6.0 }), "Average in number list: 5\n");
+    EXPECT_EQ(PrintAverage({4.0, 6.0}), "Average in number list: 5\n");
 }
 
 }  // namespace

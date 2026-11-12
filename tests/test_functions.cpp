@@ -79,8 +79,7 @@ TEST(SayHelloTest, GreetsDefaultExample) {
 
 TEST(SayHelloTest, KeepsSpacesInName) {
     // * Unlike reading with `>>`, a string argument keeps the whole name.
-    EXPECT_EQ(SayHello("John Smith", 25),
-              "Hello, John Smith! You are 25 years old.\n");
+    EXPECT_EQ(SayHello("John Smith", 25), "Hello, John Smith! You are 25 years old.\n");
 }
 
 TEST(SayHelloTest, HandlesEmptyName) {
