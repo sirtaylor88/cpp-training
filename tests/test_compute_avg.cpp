@@ -1,10 +1,12 @@
-// * Unit tests for compute_average() and print_average() in compute_avg.hpp.
+// * Unit tests for random_numbers(), compute_average(), print_numbers() and
+// * print_average() in compute_avg.hpp.
 
 // * Google Test
 #include <gtest/gtest.h>
 
 // * Standard library
 #include <cmath>
+#include <random>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -50,6 +52,50 @@ TEST(ComputeAverageTest, AllZerosGiveZero) {
 
 TEST(ComputeAverageTest, EmptyListGivesNaN) {
     EXPECT_TRUE(std::isnan(compute_average({})));
+}
+
+TEST(RandomNumbersTest, ReturnsFourNumbersByDefault) {
+    std::mt19937 engine(42);
+    EXPECT_EQ(random_numbers(engine).size(), 4u);
+}
+
+TEST(RandomNumbersTest, ReturnsRequestedCount) {
+    std::mt19937 engine(42);
+    EXPECT_EQ(random_numbers(engine, 10).size(), 10u);
+    EXPECT_TRUE(random_numbers(engine, 0).empty());
+}
+
+TEST(RandomNumbersTest, StaysWithinRange) {
+    std::mt19937 engine(42);
+    for (double number : random_numbers(engine, 1000, -5.0, 5.0)) {
+        EXPECT_GE(number, -5.0);
+        EXPECT_LT(number, 5.0);
+    }
+}
+
+TEST(RandomNumbersTest, SameSeedGivesSameNumbers) {
+    std::mt19937 first(123);
+    std::mt19937 second(123);
+    EXPECT_EQ(random_numbers(first), random_numbers(second));
+}
+
+TEST(RandomNumbersTest, AverageIsWithinRange) {
+    std::mt19937 engine(7);
+    double average = compute_average(random_numbers(engine));
+    EXPECT_GE(average, 0.0);
+    EXPECT_LT(average, 10.0);
+}
+
+TEST(PrintNumbersTest, PrintsEachNumberAfterLabel) {
+    std::ostringstream out;
+    print_numbers({ 4.4, 5.5, -1.0 }, out);
+    EXPECT_EQ(out.str(), "Numbers: 4.4 5.5 -1\n");
+}
+
+TEST(PrintNumbersTest, PrintsOnlyLabelForEmptyList) {
+    std::ostringstream out;
+    print_numbers({}, out);
+    EXPECT_EQ(out.str(), "Numbers:\n");
 }
 
 TEST(PrintAverageTest, PrintsDefaultList) {

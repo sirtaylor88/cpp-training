@@ -38,7 +38,7 @@ palette (Ctrl+Shift+P).
 ```text
 cpp-training/
 ├── include/                      # Headers with the exercise logic
-│   ├── compute_avg.hpp           # compute_average(): mean of a list of numbers
+│   ├── compute_avg.hpp           # random_numbers() + compute_average(): mean of a random list
 │   ├── functions.hpp             # say_hello() and number_utils::triple_number(): free functions and namespaces
 │   ├── prompt_exercise_1.hpp     # run_prompt(): asks for a name and age, then greets
 │   └── prompt_exercise_2.hpp     # run_prompt(): asks for two numbers, then prints the sum
