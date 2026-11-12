@@ -234,6 +234,31 @@ explicitly so the reason is visible:
 | Progress message before a long computation | `out << "Working...\n" << std::flush;` |
 | Errors, or messages that must survive a crash | `std::cerr << "error: ...\n";` (unbuffered) |
 
+### No `using namespace std;` in headers
+
+A header is copied into every file that `#include`s it, so a
+`using namespace std;` there would apply to all of those files too, without
+them asking for it. Names from `std` could then clash with your own (e.g. a
+function called `count`, `distance` or `print`). In headers, write the
+prefix:
+
+```cpp
+// include/functions.hpp
+inline void say_hello(const std::string& name, int age, std::ostream& out);
+```
+
+It is fine in a `main()` file (`functions.cpp`, ...), because nothing
+includes it:
+
+```cpp
+// functions.cpp
+using namespace std;
+
+int main() {
+    utils::say_hello("Alice", 30, cout);
+}
+```
+
 ## Adding a new exercise
 
 1. Put the logic in `include/<exercise>.hpp` as a function that takes streams

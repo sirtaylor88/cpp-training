@@ -61,8 +61,6 @@ inline double convert_temperature(double temp, char from_unit, char to_unit) {
 }
 
 // * Writes a greeting with `name` and `age` to `out`.
-// ! No `using namespace std;` in a header: it would leak into every file
-// ! that includes it.
 inline void say_hello(const std::string& name, int age, std::ostream& out) {
     out << "Hello, " << name << "! You are " << age << " years old.\n";
 }
