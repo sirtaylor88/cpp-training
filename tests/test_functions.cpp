@@ -15,7 +15,7 @@ namespace {
 // * Runs print_triple_number() on `n` and returns everything it wrote.
 std::string PrintTriple(int n) {
     std::ostringstream out;
-    number_utils::print_triple_number(n, out);
+    utils::print_triple_number(n, out);
     return out.str();
 }
 
@@ -27,19 +27,19 @@ std::string SayHello(const std::string& name, int age) {
 }
 
 TEST(TripleNumberTest, TriplesPositiveNumber) {
-    EXPECT_EQ(number_utils::triple_number(5), 15);
+    EXPECT_EQ(utils::triple_number(5), 15);
 }
 
 TEST(TripleNumberTest, TripleOfZeroIsZero) {
-    EXPECT_EQ(number_utils::triple_number(0), 0);
+    EXPECT_EQ(utils::triple_number(0), 0);
 }
 
 TEST(TripleNumberTest, TriplesNegativeNumber) {
-    EXPECT_EQ(number_utils::triple_number(-4), -12);
+    EXPECT_EQ(utils::triple_number(-4), -12);
 }
 
 TEST(TripleNumberTest, TriplesOne) {
-    EXPECT_EQ(number_utils::triple_number(1), 3);
+    EXPECT_EQ(utils::triple_number(1), 3);
 }
 
 TEST(PrintTripleNumberTest, PrintsDefaultExample) {

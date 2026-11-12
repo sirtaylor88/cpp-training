@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-namespace number_utils {
+namespace utils {
 
 // * Returns `n` multiplied by 3.
 inline int triple_number(int n) {
@@ -19,7 +19,7 @@ inline void print_triple_number(int n, std::ostream& out) {
     out << "The triple of " << n << " is " << result << "." << std::endl;
 }
 
-}  // namespace number_utils
+}  // namespace utils
 
 // * Writes a greeting with `name` and `age` to `out`.
 // ! No `using namespace std;` in a header: it would leak into every file
